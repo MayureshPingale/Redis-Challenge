@@ -27,8 +27,8 @@ public class Main {
 
           String input = in.readLine();
           System.out.println(input);
-          
-          out.write("PONG" + CRLF);
+
+          out.write("+PONG" + CRLF);
           out.flush();
        
         } catch (IOException e) {

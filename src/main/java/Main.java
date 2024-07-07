@@ -29,18 +29,14 @@ public class Main {
           out = new PrintWriter(clientSocket.getOutputStream(), true);
           in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-          String input = in.readLine();
-          System.out.println(input);
+          String input;
 
-          out.write("+PONG" + CRLF);
-          out.flush();
-
-          input = in.readLine();
-          System.out.println(input);
-
-          out.write("+PONG" + CRLF);
-          out.flush();
-       
+          while( (input = in.readLine()) != null) {
+            System.out.println(input);
+            out.write("+PONG" + CRLF);
+            out.flush();
+          } 
+          
         } catch (IOException e) {
           System.out.println("IOException: " + e.getMessage());
        } finally {

@@ -33,10 +33,12 @@ public class Main {
 
           while( (input = in.readLine()) != null) {
             System.out.println(input);
-            out.write("+PONG" + CRLF);
-            out.flush();
+            if(input.equalsIgnoreCase("PING")) {
+              out.write("+PONG" + CRLF);
+              out.flush();
+            }
           } 
-          
+
         } catch (IOException e) {
           System.out.println("IOException: " + e.getMessage());
        } finally {

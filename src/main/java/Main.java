@@ -10,7 +10,6 @@ public class Main{
     static int port = 6379;
     static String CRLF = "\r\n";
 
-
     static class Client extends Thread {
       Socket clientSocket;
       PrintWriter out;
@@ -54,10 +53,7 @@ public class Main{
     }
 
   public static void main(String[] args) throws Exception {
-    // You can use print statements as follows for debugging, they'll be visible when running tests.
     System.out.println("Logs from your program will appear here!");
-
-    //  Uncomment this block to pass the first stage
         try {
           serverSocket = new ServerSocket(port);
           serverSocket.setReuseAddress(true);

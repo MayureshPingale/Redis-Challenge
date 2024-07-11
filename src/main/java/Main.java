@@ -6,7 +6,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Main{
     static ServerSocket serverSocket = null;
@@ -28,8 +27,15 @@ public class Main{
       public void run(){
         System.out.println("Client Connected: " + clientSocket);
         StringBuilder clientRequest = new StringBuilder();
-        String input = in.lines().collect(Collectors.joining(System.lineSeparator()));
-        clientRequest.append(input);
+        String input; //= in.lines().collect(Collectors.joining(System.lineSeparator());
+        try {
+          while((input = in.readLine()) != null) {
+                System.out.println(input);
+                clientRequest.append(input);
+            }
+        } catch (IOException e) {
+            System.out.println(e);
+        }
         
         System.out.println(String.format("Client Request: %s. Length: %s", clientRequest, clientRequest.length()));
         List<String> tokens = deserializeClientRequest(clientRequest.toString());

@@ -4,6 +4,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main{
     static ServerSocket serverSocket = null;
@@ -23,21 +25,78 @@ public class Main{
 
       @Override
       public void run(){
+        System.out.println("Client Connected: " + clientSocket);
+        StringBuilder clientRequest = new StringBuilder();
         String input;
         try {
           while((input = in.readLine()) != null) {
-            System.out.println(input);
-            if(input.equalsIgnoreCase("PING")) {
-              out.write("+PONG" + CRLF);
-              out.flush();
-              Thread.sleep(10);
+                clientRequest.append(input);
+                clientRequest.append(System.lineSeparator());
             }
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        
+        System.out.println("Client Request:" + clientRequest);
+        List<String> tokens = deserializeClientRequest(clientRequest.toString());
+        int itr = 0;
+
+        while(itr < tokens.size()) {
+          if(tokens.get(itr).equalsIgnoreCase("PING")) {
+            respondSimpleString("PONG");
+            itr++;  
           }
-        } catch (IOException | InterruptedException e) {
-          System.err.println(e);
+          else if(tokens.get(itr).equals("ECHO")){
+            respondBulkString(tokens.get(itr + 1));
+            itr += 2;
+          }
+          else{
+            System.out.println("Command Not Found: " + tokens.get(itr++));
+          }
         }
   
         deleteConnnection();
+      }
+
+      public List<String> deserializeClientRequest(String request) {
+        int i = 0;
+        List<String> tokens = new ArrayList<>();
+        while(i < request.length()) {
+          char firstCharacter = request.charAt(i);
+          i++;
+          switch (firstCharacter) {
+              case '*':
+                  i = processArrayType(i, request, tokens);
+                  break;
+              case '+':
+                  i = processSimpleStringType(i+1, request, tokens);
+              default:
+                  throw new AssertionError();
+          }
+        }
+
+        return tokens;
+      }
+
+      int processArrayType(int start, String request, List<String> tokens) {
+
+        return  0;
+      }
+
+      int processSimpleStringType(int start, String request, List<String> tokens) {
+          int endIndex = request.indexOf(CRLF, start);
+          String simple = request.substring(start , endIndex);
+          tokens.add(simple);
+          return endIndex + CRLF.length() + 1;
+      }
+
+      void respondSimpleString(String simple) {
+        out.write("+" + simple + CRLF);
+        out.flush();
+      }
+
+      void respondBulkString(String outpuString) {
+        
       }
 
       public void deleteConnnection() {

@@ -10,7 +10,7 @@ import java.util.List;
 public class Main{
     static ServerSocket serverSocket = null;
     static int port = 6379;
-    static String CRLF = "\\r\\n";
+    static String CRLF = "\r\n";
 
     static class Client extends Thread {
       Socket clientSocket;
@@ -27,36 +27,39 @@ public class Main{
       public void run(){
         System.out.println("Client Connected: " + clientSocket);
         StringBuilder clientRequest = new StringBuilder();
-        String input; //= in.lines().collect(Collectors.joining(System.lineSeparator());
+        String input;// = in.lines().collect(Collectors.joining(System.lineSeparator()));
         try {
           while((input = in.readLine()) != null) {
-                clientRequest.append(input);
-                clientRequest.append(System.lineSeparator());
+                if(input.equalsIgnoreCase("PING")) {
+                  respondSimpleString("PONG");
+                }
+                else if(input.equalsIgnoreCase("ECHO")) {
+                    in.readLine();
+                    respondBulkString(in.readLine());
+                }
             }
         } catch (IOException e) {
             System.out.println(e);
         }
-        
-        System.out.println(String.format("Client Request: %s. Length: %s", clientRequest, clientRequest.length()));
-        List<String> tokens = deserializeClientRequest(clientRequest.toString());
-        System.out.println("Extracted tokens: " + tokens);
-        int itr = 0;
+        // List<String> tokens = deserializeClientRequest(clientRequest.toString());
+        // System.out.println("Extracted tokens: " + tokens);
+        // int itr = 0;
 
-        while(itr < tokens.size()) {
-          if(tokens.get(itr).equalsIgnoreCase("PING")) {
-            System.out.println("Responding to PING Command");
-            respondSimpleString("PONG");
-            itr++;  
-          }
-          else if(tokens.get(itr).equalsIgnoreCase("ECHO")){
-            System.out.println("Responding to ECHO Command");
-            respondBulkString(tokens.get(itr + 1));
-            itr += 2;
-          }
-          else{
-            System.out.println("Command Not Found: " + tokens.get(itr++));
-          }
-        }
+        // while(itr < tokens.size()) {
+        //   if(tokens.get(itr).equalsIgnoreCase("PING")) {
+        //     System.out.println("Responding to PING Command");
+        //     respondSimpleString("PONG");
+        //     itr++;  
+        //   }
+        //   else if(tokens.get(itr).equalsIgnoreCase("ECHO")){
+        //     System.out.println("Responding to ECHO Command");
+        //     respondBulkString(tokens.get(itr + 1));
+        //     itr += 2;
+        //   }
+        //   else{
+        //     System.out.println("Command Not Found: " + tokens.get(itr++));
+        //   }
+        // }
   
         deleteConnnection();
       }

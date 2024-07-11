@@ -30,8 +30,8 @@ public class Main{
         String input; //= in.lines().collect(Collectors.joining(System.lineSeparator());
         try {
           while((input = in.readLine()) != null) {
-                System.out.println(input);
                 clientRequest.append(input);
+                clientRequest.append(System.lineSeparator());
             }
         } catch (IOException e) {
             System.out.println(e);
